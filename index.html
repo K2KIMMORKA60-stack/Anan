@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="phone">
-  <header class="app"><div class="in"><img src="icons/icon-192.png" alt="Logo ANAN"><div><h1>ANAN</h1><small id="sous">Communauté 2025 – 2026</small></div><button id="compte" hidden>Mon compte</button></div>
+  <header class="app"><div class="in"><img src="icons/icon-192.png" alt="Logo ANAN"><div><h1>ANAN</h1><small id="sous">Communauté 2025 – 2026</small></div><label class="langue"><span aria-hidden="true">🌐</span><select id="langue" aria-label="Langue"></select></label><button id="compte" hidden>Mon compte</button></div>
     <div class="flag"><i style="background:#E05206"></i><i style="background:#FFFFFF"></i><i style="background:#0DB02B"></i></div></header>
   <main id="main"><div class="empty">Chargement…</div></main>
   <nav class="tabs" id="tabs" aria-label="Sections" hidden></nav>
@@ -28,6 +28,7 @@
 <noscript>Activez JavaScript pour utiliser l'application ANAN.</noscript>
 <script src="vendor/supabase.js"></script>
 <script src="config.js"></script>
+<script src="i18n.js"></script>
 <script src="reglement.js"></script>
 <script src="app.js"></script>
 </body>

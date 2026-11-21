@@ -19,7 +19,7 @@ header.app .in{display:flex;align-items:center;gap:12px;padding:12px max(16px,en
 header.app img{width:38px;height:38px;border-radius:10px;background:#fff}
 header.app h1{font-family:var(--display);font-weight:800;font-size:17px;margin:0;letter-spacing:.03em}
 header.app small{display:block;font-size:12px;opacity:.85}
-header.app button{all:unset;cursor:pointer;margin-left:auto;font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16)}
+header.app button{all:unset;cursor:pointer;font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16)}
 header.app button:focus-visible{outline:2px solid #fff}
 .flag{display:flex;height:4px}.flag i{flex:1}
 main{flex:1;display:flex;flex-direction:column;gap:14px;padding:16px max(16px,env(safe-area-inset-right,0px)) 96px max(16px,env(safe-area-inset-left,0px))}
@@ -94,3 +94,12 @@ th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu
 .ok-msg{color:var(--ok);font-size:13px;font-weight:600}
 .lien{color:var(--vert-fonce);font-weight:600;background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
 .install{display:flex;gap:10px;align-items:center}
+
+/* Choix de la langue */
+header.app .langue{margin-inline-start:auto;display:flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,.16);border-radius:999px;padding:2px 4px 2px 8px}
+header.app .langue select{all:unset;cursor:pointer;color:#fff;font-size:12px;font-weight:600;max-width:150px;padding:4px 6px 4px 0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+header.app .langue select option{color:#18231B;background:#fff}
+header.app .langue:focus-within{outline:2px solid #fff}
+header.app .in{flex-wrap:wrap}
+[dir="rtl"] .equipe{border-left:0;border-right:4px solid var(--orange)}
+[dir="rtl"] .regle ol,[dir="rtl"] .regle ul{padding-left:0;padding-right:20px}

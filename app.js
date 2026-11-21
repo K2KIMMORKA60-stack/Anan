@@ -5,11 +5,13 @@
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fd = d => new Date(d).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
-const fds = d => new Date(d).toLocaleDateString('fr-FR');
+const L = () => window.I18N ? I18N.locale() : 'fr-FR';
+const tr = x => window.I18N ? I18N.t(x) : x;
+const fd = d => new Date(d).toLocaleDateString(L(), {day:'numeric', month:'long', year:'numeric'});
+const fds = d => new Date(d).toLocaleDateString(L());
 const SYM = {FCFA:'FCFA', EUR:'€', USD:'$'};
-const fm = (n, d) => (Number(n) || 0).toLocaleString('fr-FR') + ' ' + (SYM[d] || d || 'FCFA');
-function toast(t){ const e = $('#toast'); e.textContent = t; e.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => e.hidden = true, 3000); }
+const fm = (n, d) => (Number(n) || 0).toLocaleString(L()) + ' ' + (SYM[d] || d || 'FCFA');
+function toast(t){ const e = $('#toast'); e.textContent = tr(t); e.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => e.hidden = true, 3000); }
 const safeUrl = u => /^https:\/\//i.test(u || '') ? u : '';
 
 const OPS = [['Orange Money','#FF7900','OM'],['Airtel Money','#E40000','AM'],['Moov Money','#0066B3','MV'],['MTN MoMo','#E8B400','MT'],['Wave','#1DC4FF','WV']];
@@ -93,11 +95,23 @@ function render(){
   const connecte = !!(S.session && S.profil);
   $('#compte').hidden = !connecte; $('#tabs').hidden = !connecte;
   $('#sous').textContent = connecte ? (isEquipe() ? 'Espace équipe' : 'Bonjour ' + S.profil.nom) : 'Communauté 2025 – 2026';
-  if (S.recup) { $('#main').innerHTML = vueNouveauMdp(); return; }
-  if (!connecte) { $('#main').innerHTML = S.session ? '<div class="empty">Chargement…</div>' : vueAuth(); return; }
+  menuLangue();
+  if (S.recup) { $('#main').innerHTML = vueNouveauMdp(); return fin(); }
+  if (!connecte) { $('#main').innerHTML = (S.session ? '<div class="empty">Chargement…</div>' : vueAuth()); return fin(); }
   if (S.tab !== 'compte' && !tabs().some(x => x[0] === S.tab)) S.tab = 'accueil';
   $('#tabs').innerHTML = tabs().map(([k, l]) => `<button data-tab="${k}" ${S.tab === k ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>${l}</button>`).join('');
   $('#main').innerHTML = (V[S.tab] || V.accueil)();
+  fin();
+}
+function menuLangue(){
+  const sel = $('#langue'); if (!sel || !window.I18N) return;
+  if (!sel.options.length) sel.innerHTML = I18N.LANGS.map(l => `<option value="${l.code}">${l.nom === l.fr ? l.nom : l.nom + ' (' + l.fr + ')'}</option>`).join('');
+  sel.value = I18N.lang;
+}
+function fin(){
+  if (!window.I18N) return;
+  if (!I18N.traduit()) $('#main').insertAdjacentHTML('afterbegin', '<div class="hint" data-brut>Traduction en préparation pour cette langue : le texte s\'affiche en français pour l\'instant.</div>');
+  I18N.apply(document.querySelector('.phone'));
 }
 
 function vueAuth(){
@@ -144,7 +158,7 @@ contribuer(){
   if (S.pay) {
     const p = S.pay, lien = safeUrl(p.lien);
     return `<h2>Contribuer</h2><div class="card"><div class="ok-big"><div class="rond">✓</div><h3>Contribution enregistrée</h3>
-      <p class="small muted">${fm(p.montant, p.devise)} par ${esc(p.nomMoyen)}${p.detail ? ' (' + esc(p.detail) + ')' : ''}. Elle apparaît « en attente » jusqu'à ce que l'équipe confirme la réception.</p></div>
+      <p class="small"><b>${fm(p.montant, p.devise)}</b> · ${esc(p.nomMoyen)}${p.detail ? ' (' + esc(p.detail) + ')' : ''}</p><p class="small muted">Elle apparaît « en attente » jusqu'à ce que l'équipe confirme la réception.</p></div>
       ${p.instructions || lien ? `<h3>Comment payer</h3>${p.instructions ? `<p class="small" style="white-space:pre-wrap">${esc(p.instructions)}</p>` : ''}${lien ? `<a class="btn orange block" href="${esc(lien)}" target="_blank" rel="noopener noreferrer">Ouvrir la page de paiement sécurisée</a>` : ''}` : '<div class="hint">Ce moyen de paiement n\'est pas encore configuré par l\'équipe. Vous serez contacté par e-mail.</div>'}
       <button class="btn block" data-act="payer-retour">Retour</button></div>`;
   }
@@ -156,7 +170,7 @@ contribuer(){
   <form data-f="payer" class="card">
    <label class="f">Devise<select id="pa-devise" name="devise">${[['FCFA','Franc CFA (FCFA)'],['EUR','Euro (€)'],['USD','Dollar ($)']].map(([v, l]) => `<option value="${v}" ${S.sel.devise === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
    <span class="small muted" style="font-weight:600">Montant</span>
-   <div class="choix-grid">${pr.map((x, i) => `<label class="choix"><input type="radio" name="montant" value="${x}" ${i === 1 ? 'checked' : ''}>${x.toLocaleString('fr-FR')} ${SYM[S.sel.devise]}</label>`).join('')}<label class="choix"><input type="radio" name="montant" value="autre">Autre</label></div>
+   <div class="choix-grid">${pr.map((x, i) => `<label class="choix"><input type="radio" name="montant" value="${x}" ${i === 1 ? 'checked' : ''}>${x.toLocaleString(L())} ${SYM[S.sel.devise]}</label>`).join('')}<label class="choix"><input type="radio" name="montant" value="autre">Autre</label></div>
    <label class="f">Autre montant<input id="pa-autre" name="autre" type="number" min="1" step="any" inputmode="decimal"></label>
    <span class="small muted" style="font-weight:600">Moyen de paiement</span>
    <div class="list" style="gap:8px">${S.moyens.map(x => `<label class="choix" style="justify-content:flex-start;padding:12px 14px"><input type="radio" name="moyen" value="${esc(x.id)}" ${m === x.id ? 'checked' : ''}><span aria-hidden="true">${ICO_MOYEN[x.id] || '•'}</span>${esc(x.nom)}${x.id === 'carte' ? ' <span class="small muted">Visa, Mastercard</span>' : ''}</label>`).join('')}</div>
@@ -178,7 +192,7 @@ avis(){
    <p class="small muted">Votre avis est lu uniquement par l'équipe de l'ANAN.</p></form>
   <h3>Mes avis envoyés</h3>${S.mesAvis.length ? `<div class="list">${S.mesAvis.map(a => `<div class="item"><div class="top"><span class="st">${etoiles(a.note)}</span><span class="small muted">${fd(a.cree_le)}</span></div>${a.texte ? `<p class="small">${esc(a.texte)}</p>` : ''}</div>`).join('')}</div>` : '<div class="empty">Vous n\'avez pas encore donné d\'avis.</div>'}`;
 },
-reglement(){ return window.ANAN_REGLEMENT || ''; },
+reglement(){ const T = window.ANAN_REGLEMENT_TR || {}; return (window.I18N && T[I18N.lang]) || window.ANAN_REGLEMENT || ''; },
 equipe(){
   if (!isEquipe()) return '';
   const E = S.eq;
@@ -228,7 +242,7 @@ function installCard(){
 }
 
 /* ---------- actions ---------- */
-function err(t){ const e = $('#err'); if (e) e.textContent = t; }
+function err(t){ const e = $('#err'); if (e) e.textContent = tr(t); }
 const okMdp = p => p.length >= 8 && /\d/.test(p);
 let occupe = false;
 document.addEventListener('submit', async e => {
@@ -301,6 +315,7 @@ async function soumettre(f, v){
 async function chargerMoyensTous(){ const t = await q(sb.from('moyens_paiement').select('*').order('ordre')); if (t) { S._tous = t; S.moyens = t.filter(m => m.actif); } }
 
 document.addEventListener('change', e => {
+  if (e.target.id === 'langue') { I18N.set(e.target.value); render(); return; }
   if (e.target.id === 'pa-devise') { S.sel.devise = e.target.value; render(); }
   else if (e.target.name === 'moyen' && e.target.closest('form[data-f=payer]')) { S.sel.moyen = e.target.value; render(); }
 });
