@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<title>ANAN</title>
+<meta name="description" content="Application officielle de l'association ANAN">
+<meta name="theme-color" content="#0B5E28">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ANAN">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="phone">
+  <header class="app"><div class="in"><img src="icons/icon-192.png" alt="Logo ANAN"><div><h1>ANAN</h1><small id="sous">Communauté 2025 – 2026</small></div><button id="compte" hidden>Mon compte</button></div>
+    <div class="flag"><i style="background:#E05206"></i><i style="background:#FFFFFF"></i><i style="background:#0DB02B"></i></div></header>
+  <main id="main"><div class="empty">Chargement…</div></main>
+  <nav class="tabs" id="tabs" aria-label="Sections" hidden></nav>
+</div>
+<div class="toast" id="toast" hidden></div>
+<noscript>Activez JavaScript pour utiliser l'application ANAN.</noscript>
+<script src="vendor/supabase.js"></script>
+<script src="config.js"></script>
+<script src="reglement.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
